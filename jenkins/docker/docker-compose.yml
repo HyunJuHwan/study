@@ -1,0 +1,23 @@
+version: "3.8" 
+
+services:
+
+  jenkins:
+    container_name: my-jenkins
+    image: my-jenkins
+    user: root
+    restart: always
+    volumes:
+      - $VOLUME_JENKINS_HOME:/var/jenkins_home # jenkins 설치 폴더
+      - /var/run:/var/run:ro              # docker 실행 폴더 공유
+    environment:
+      - JENKINS_OPTS=--httpPort=38080       # port 변경
+#      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Dhudson.footerURL=http://${HOST_NAME} -Duser.timezone=Asia/Seoul
+      - JAVA_OPTS=-Dhudson.footerURL=http://${HOST_NAME} -Duser.timezone=Asia/Seoul
+#      - JENKINS_USER=${JENKINS_USER}
+#      - JENKINS_PASS=${JENKINS_PASS}
+    ports:
+      - "38080:38080"                      # jenkins 접속 port
+      - "50000:50000"                     # jenkins agent를 통해 통신 할때 
+    group_add:
+      - ${DOCKER_GROUP}                   # docker 실행을 위한 그룹 추가 
